@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>eWizard Platform Pricing Calculator</title>
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body>
+    <div id="root"></div>
+    
+    <script type="text/babel">
+        const { useState } = React;
+        
+        const Package = ({ className }) => (
+            <svg className={className} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
+            </svg>
+        );
+        
+        const ListChecks = ({ className }) => (
+            <svg className={className} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" />
+            </svg>
+        );
+        
+        const Layers = ({ className }) => (
+            <svg className={className} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+            </svg>
+        );
+        
+        const PlusCircle = ({ className }) => (
+            <svg className={className} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v3m0 0v3m0-3h3m-3 0H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+        );
+
+        const PricingCalculator = () => {
+          const [activeTab, setActiveTab] = useState('calculator');
+          const [licenseType, setLicenseType] = useState('all-in-one');
+          const [totalUsers, setTotalUsers] = useState(50);
+          const [isRecurringCustomer, setIsRecurringCustomer] = useState(false);
+          
+          const [coreServices, setCoreServices] = useState({
+            contentCloud: { selected: false, users: 50 },
+            navigate: { selected: false, users: 50 }
+          });
+          
+          const [addonServices, setAddonServices] = useState({
+            planner: { selected: false, users: 50 },
+            pulse: { selected: false, users: 50 },
+            admin: { selected: false, users: 50 },
+            agency: { selected: false, users: 50 },
+            cts: { selected: false, users: 50 }
+          });
+          
+          const coreServiceDetails = {
+            contentCloud: { name: 'Content Cloud', price: 45 },
+            navigate: { name: 'Navigate', price: 20 }
+          };
+          
+          const addonServiceDetails = {
+            planner: { name: 'Planner', price: 20 },
+            pulse: { name: 'Pulse', price: 5 },
+            admin: { name: 'Admin', price: 15 },
+            agency: { name: 'Agency', price: 15 },
+            cts: { name: 'CTS', price: 20 }
+          };
+          
+          const getSegment = (users) => {
+            if (users <= 10) return { name: 'SMB Micro', impl: 1500, rollout: 2500, blendedRate: 44, tier: 'SMB' };
+            if (users <= 50) return { name: 'SMB Small', impl: 3000, rollout: 2500, blendedRate: 44, tier: 'SMB' };
+            if (users <= 100) return { name: 'SMB Medium', impl: 5000, rollout: 2500, blendedRate: 44, tier: 'SMB' };
+            if (users <= 200) return { name: 'Mid-Market Small', impl: 10000, rollout: 5000, blendedRate: 59, tier: 'Mid-Market' };
+            if (users <= 500) return { name: 'Mid-Market Medium', impl: 20000, rollout: 6500, blendedRate: 59, tier: 'Mid-Market' };
+            if (users <= 1000) return { name: 'Mid-Market Large', impl: 35000, rollout: 8000, blendedRate: 59, tier: 'Mid-Market' };
+            if (users <= 2000) return { name: 'Enterprise Small', impl: 50000, rollout: 15000, blendedRate: 59, tier: 'Enterprise' };
+            if (users <= 5000) return { name: 'Enterprise Medium', impl: 75000, rollout: 22500, blendedRate: 59, tier: 'Enterprise' };
+            return { name: 'Enterprise Large', impl: 100000, rollout: 30000, blendedRate: 59, tier: 'Enterprise' };
+          };
+          
+          const hasCoreService = coreServices.contentCloud.selected || coreServices.navigate.selected;
+          
+          let monthlyLicenseCost = 0;
+          let maxUsers = 0;
+          
+          if (licenseType === 'all-in-one') {
+            monthlyLicenseCost = totalUsers * 85;
+            maxUsers = totalUsers;
+          } else {
+            Object.keys(coreServices).forEach(key => {
+              if (coreServices[key].selected) {
+                monthlyLicenseCost += coreServices[key].users * coreServiceDetails[key].price;
+                maxUsers = Math.max(maxUsers, coreServices[key].users);
+              }
+            });
+            Object.keys(addonServices).forEach(key => {
+              if (addonServices[key].selected) {
+                monthlyLicenseCost += addonServices[key].users * addonServiceDetails[key].price;
+                maxUsers = Math.max(maxUsers, addonServices[key].users);
+              }
+            });
+          }
+          
+          const segment = getSegment(licenseType === 'all-in-one' ? totalUsers : maxUsers);
+          const supportUsers = licenseType === 'all-in-one' ? totalUsers : maxUsers;
+          const annualLicenseCost = monthlyLicenseCost * 12;
+          const annualSupport = supportUsers * 0.35 * segment.blendedRate * 12;
+          const totalOneTime = isRecurringCustomer ? 0 : (segment.impl + segment.rollout);
+          const year1Total = totalOneTime + annualLicenseCost + annualSupport;
+          const year2PlusAnnual = annualLicenseCost + annualSupport;
+          
+          const formatEuro = (amount) => {
+            return new Intl.NumberFormat('de-DE', { style: 'currency', currency: 'EUR' }).format(amount);
+          };
+          
+          return React.createElement('div', { className: 'min-h-screen bg-gradient-to-br from-cyan-50 via-blue-50 to-indigo-50 p-8' },
+            React.createElement('div', { className: 'max-w-6xl mx-auto' },
+              React.createElement('div', { className: 'bg-white rounded-t-2xl shadow-lg p-8 border-b-4' },
+                React.createElement('div', { className: 'flex items-center justify-center mb-6' },
+                  React.createElement('h1', { 
+                    className: 'text-5xl font-bold bg-gradient-to-r from-cyan-500 to-blue-600 bg-clip-text text-transparent',
+                    style: { WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }
+                  }, 'eWizard')
+                ),
+                React.createElement('div', { className: 'text-center' },
+                  React.createElement('h2', { 
+                    className: 'text-3xl font-bold bg-gradient-to-r from-cyan-600 to-blue-800 bg-clip-text text-transparent mb-2',
+                    style: { WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }
+                  }, 'Platform Pricing Calculator'),
+                  React.createElement('p', { className: 'text-gray-600 text-sm' }, 'Configure your perfect eWizard package')
+                ),
+                React.createElement('div', { className: 'flex justify-center gap-2 mt-6' },
+                  React.createElement('button', {
+                    onClick: () => setActiveTab('calculator'),
+                    className: `px-6 py-3 rounded-lg font-semibold transition-all ${
+                      activeTab === 'calculator'
+                        ? 'bg-gradient-to-r from-cyan-500 to-blue-600 text-white shadow-lg'
+                        : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                    }`
+                  }, 'Pricing Calculator'),
+                  React.createElement('button', {
+                    onClick: () => setActiveTab('matrix'),
+                    className: `px-6 py-3 rounded-lg font-semibold transition-all ${
+                      activeTab === 'matrix'
+                        ? 'bg-gradient-to-r from-cyan-500 to-blue-600 text-white shadow-lg'
+                        : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                    }`
+                  }, 'Pricing Matrix')
+                )
+              ),
+              React.createElement('div', { className: 'bg-white rounded-b-2xl shadow-xl p-8' },
+                React.createElement('div', { className: 'text-center p-8' },
+                  React.createElement('h2', { className: 'text-2xl font-bold text-gray-800 mb-4' }, 
+                    activeTab === 'calculator' ? 'Calculator View' : 'Pricing Matrix View'
+                  ),
+                  React.createElement('p', { className: 'text-gray-600' }, 
+                    'The full calculator is loading. If you see this message, the component is working!'
+                  )
+                )
+              )
+            )
+          );
+        };
+
+        ReactDOM.render(React.createElement(PricingCalculator), document.getElementById('root'));
+    </script>
+</body>
+</html>
