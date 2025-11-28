@@ -36,10 +36,94 @@
           const totalOneTime = isRecurringCustomer ? 0 : (segment.impl + segment.rollout);
           const year1Total = totalOneTime + annualLicenseCost + annualSupport;
           const year2PlusAnnual = annualLicenseCost + annualSupport;
-          const formatEuro = (amount) => {return new Intl.NumberFormat('de-DE', { style: 'currency', currency: 'EUR' }).format(amount);};
-          return React.createElement('div',{className:'min-h-screen bg-gradient-to-br from-cyan-50 via-blue-50 to-indigo-50 p-4 sm:p-8'},React.createElement('div',{className:'max-w-6xl mx-auto'},React.createElement('div',{className:'bg-white rounded-t-2xl shadow-lg p-4 sm:p-8 border-b-4'},React.createElement('div',{className:'text-center mb-6'},React.createElement('h1',{className:'text-4xl sm:text-5xl font-bold mb-4',style:{background:'linear-gradient(to right, rgb(6, 182, 212), rgb(37, 99, 235))',WebkitBackgroundClip:'text',WebkitTextFillColor:'transparent',backgroundClip:'text'}},'eWizard'),React.createElement('h2',{className:'text-2xl sm:text-3xl font-bold mb-2',style:{background:'linear-gradient(to right, rgb(8, 145, 178), rgb(30, 64, 175))',WebkitBackgroundClip:'text',WebkitTextFillColor:'transparent',backgroundClip:'text'}},'Platform Pricing Calculator'),React.createElement('p',{className:'text-gray-600 text-sm'},'Configure your perfect eWizard package')),React.createElement('div',{className:'flex flex-col sm:flex-row justify-center gap-2 mt-6'},React.createElement('button',{onClick:()=>setActiveTab('calculator'),className:`px-6 py-3 rounded-lg font-semibold transition-all ${activeTab==='calculator'?'bg-gradient-to-r from-cyan-500 to-blue-600 text-white shadow-lg':'bg-gray-100 text-gray-600 hover:bg-gray-200'}`},'Pricing Calculator'),React.createElement('button',{onClick:()=>setActiveTab('matrix'),className:`px-6 py-3 rounded-lg font-semibold transition-all ${activeTab==='matrix'?'bg-gradient-to-r from-cyan-500 to-blue-600 text-white shadow-lg':'bg-gray-100 text-gray-600 hover:bg-gray-200'}`},'Pricing Matrix'))),React.createElement('div',{className:'bg-white rounded-b-2xl shadow-xl p-4 sm:p-8'},activeTab==='calculator'?React.createElement('div',{className:'text-center p-8'},React.createElement('h2',{className:'text-2xl font-bold mb-4'},'Full Calculator'),React.createElement('p',{className:'text-gray-600'},'Working on full implementation...')):React.createElement('div',{className:'text-center p-8'},React.createElement('h2',{className:'text-2xl font-bold mb-4'},'Pricing Matrix'),React.createElement('p',{className:'text-gray-600'},'Matrix content loading...')))));
-        };
-        ReactDOM.render(React.createElement(PricingCalculator), document.getElementById('root'));
+          const formatEuro = (amount) => new Intl.NumberFormat('de-DE', { style: 'currency', currency: 'EUR' }).format(amount);return (
+            <div className="min-h-screen bg-gradient-to-br from-cyan-50 via-blue-50 to-indigo-50 p-8">
+              <div className="max-w-6xl mx-auto">
+                <div className="bg-white rounded-t-2xl shadow-lg p-8 border-b-4">
+                  <div className="flex items-center justify-center mb-6">
+                    <h1 className="text-5xl font-bold bg-gradient-to-r from-cyan-500 to-blue-600 bg-clip-text text-transparent" style={{WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent'}}>eWizard</h1>
+                  </div>
+                  <div className="text-center">
+                    <h2 className="text-3xl font-bold bg-gradient-to-r from-cyan-600 to-blue-800 bg-clip-text text-transparent mb-2" style={{WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent'}}>Platform Pricing Calculator</h2>
+                    <p className="text-gray-600 text-sm">Configure your perfect eWizard package</p>
+                  </div>
+                  <div className="flex justify-center gap-2 mt-6">
+                    <button onClick={() => setActiveTab('calculator')} className={`px-6 py-3 rounded-lg font-semibold transition-all ${activeTab === 'calculator' ? 'bg-gradient-to-r from-cyan-500 to-blue-600 text-white shadow-lg' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'}`}>Pricing Calculator</button>
+                    <button onClick={() => setActiveTab('matrix')} className={`px-6 py-3 rounded-lg font-semibold transition-all ${activeTab === 'matrix' ? 'bg-gradient-to-r from-cyan-500 to-blue-600 text-white shadow-lg' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'}`}>Pricing Matrix</button>
+                  </div>
+                </div>
+                <div className="bg-white rounded-b-2xl shadow-xl p-8">
+                  {activeTab === 'calculator' ? (
+                    <div className="space-y-6">
+                      <div className="mb-8">
+                        <h2 className="text-xl font-bold text-gray-800 mb-4">Select License Type</h2>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                          <button onClick={() => setLicenseType('all-in-one')} className={`p-6 rounded-xl border-2 transition-all ${licenseType === 'all-in-one' ? 'border-blue-500 bg-gradient-to-br from-cyan-50 to-blue-50 shadow-lg ring-2 ring-blue-200' : 'border-gray-300 bg-white hover:border-blue-300'}`}>
+                            <div className="flex items-center gap-3 mb-3"><Package className={`w-6 h-6 ${licenseType === 'all-in-one' ? 'text-blue-600' : 'text-gray-400'}`} /><h3 className="text-lg font-bold text-gray-800">All-in-One License</h3></div>
+                            <div className="text-3xl font-bold bg-gradient-to-r from-cyan-600 to-blue-600 bg-clip-text text-transparent mb-2" style={{WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent'}}>EUR 85</div>
+                            <div className="text-sm text-gray-600">per user/month</div>
+                          </button>
+                          <button onClick={() => setLicenseType('individual')} className={`p-6 rounded-xl border-2 transition-all ${licenseType === 'individual' ? 'border-blue-500 bg-gradient-to-br from-cyan-50 to-blue-50 shadow-lg ring-2 ring-blue-200' : 'border-gray-300 bg-white hover:border-blue-300'}`}>
+                            <div className="flex items-center gap-3 mb-3"><ListChecks className={`w-6 h-6 ${licenseType === 'individual' ? 'text-blue-600' : 'text-gray-400'}`} /><h3 className="text-lg font-bold text-gray-800">Individual Services</h3></div>
+                            <div className="text-3xl font-bold bg-gradient-to-r from-cyan-600 to-blue-600 bg-clip-text text-transparent mb-2" style={{WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent'}}>Custom</div>
+                            <div className="text-sm text-gray-600">flexible pricing</div>
+                          </button>
+                        </div>
+                      </div>{licenseType === 'all-in-one' && (
+                        <div className="mb-8 p-6 bg-gradient-to-br from-cyan-50 to-blue-50 rounded-xl border-2 border-blue-200">
+                          <label className="block text-lg font-semibold text-gray-700 mb-3">Number of Users</label>
+                          <input type="number" min="1" value={totalUsers} onChange={(e) => setTotalUsers(parseInt(e.target.value) || 1)} className="w-full px-4 py-3 text-2xl font-bold border-2 border-blue-300 rounded-lg focus:outline-none focus:border-blue-500" />
+                          <div className="mt-3 text-sm text-gray-600">Customer Segment: <span className="font-bold text-blue-700">{segment.name}</span></div>
+                        </div>
+                      )}
+                      {licenseType === 'individual' && (
+                        <div className="space-y-6 mb-8">
+                          <div className="p-6 bg-gradient-to-br from-blue-50 to-cyan-50 rounded-xl border-2 border-blue-300">
+                            <h3 className="text-lg font-bold text-gray-800 mb-4">Core Services</h3>
+                            {Object.keys(coreServiceDetails).map(key => (
+                              <div key={key} className="flex items-center gap-3 p-4 bg-white rounded-lg border-2 border-gray-200 mb-3">
+                                <input type="checkbox" checked={coreServices[key].selected} onChange={() => setCoreServices(prev => ({...prev, [key]: { ...prev[key], selected: !prev[key].selected }}))} className="w-5 h-5" />
+                                <div className="flex-1"><div className="font-semibold">{coreServiceDetails[key].name}</div><div className="text-sm text-gray-600">EUR {coreServiceDetails[key].price}/user/month</div></div>
+                                {coreServices[key].selected && (<input type="number" min="1" value={coreServices[key].users} onChange={(e) => setCoreServices(prev => ({...prev, [key]: { ...prev[key], users: parseInt(e.target.value) || 1 }}))} className="w-20 px-3 py-2 border-2 border-blue-300 rounded" />)}
+                              </div>
+                            ))}
+                          </div>
+                          <div className="p-6 bg-gradient-to-br from-green-50 to-emerald-50 rounded-xl border-2 border-green-300">
+                            <h3 className="text-lg font-bold text-gray-800 mb-4">Add-on Services</h3>
+                            {Object.keys(addonServiceDetails).map(key => (
+                              <div key={key} className="flex items-center gap-3 p-4 bg-white rounded-lg border-2 border-gray-200 mb-3">
+                                <input type="checkbox" checked={addonServices[key].selected} onChange={() => setAddonServices(prev => ({...prev, [key]: { ...prev[key], selected: !prev[key].selected }}))} disabled={!hasCoreService} className="w-5 h-5" />
+                                <div className="flex-1"><div className="font-semibold">{addonServiceDetails[key].name}</div><div className="text-sm text-gray-600">EUR {addonServiceDetails[key].price}/user/month</div></div>
+                                {addonServices[key].selected && (<input type="number" min="1" value={addonServices[key].users} onChange={(e) => setAddonServices(prev => ({...prev, [key]: { ...prev[key], users: parseInt(e.target.value) || 1 }}))} className="w-20 px-3 py-2 border-2 border-blue-300 rounded" />)}
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                      )}
+                      {(licenseType === 'all-in-one' || hasCoreService) && (
+                        <div className="space-y-6">
+                          <div className="border-2 border-gray-200 rounded-lg p-6">
+                            <div className="flex justify-between items-center mb-4">
+                              <h2 className="text-xl font-bold">One-Time Fees</h2>
+                              <label className="flex items-center gap-2 cursor-pointer"><input type="checkbox" checked={isRecurringCustomer} onChange={(e) => setIsRecurringCustomer(e.target.checked)} className="w-5 h-5 text-blue-600 rounded" /><span className="text-sm font-semibold text-blue-600">Recurring Customer</span></label>
+                            </div>
+                            {isRecurringCustomer ? (<div className="p-4 bg-green-50 border border-green-200 rounded-lg"><p className="text-green-700 font-semibold">No one-time fees for recurring customers</p><p className="text-sm text-green-600 mt-1">Implementation and Platform Rollout fees waived</p></div>) : (<div className="space-y-3"><div className="flex justify-between"><span>Implementation Fee</span><span className="font-semibold">{formatEuro(segment.impl)}</span></div><div className="flex justify-between"><span>Platform Rollout</span><span className="font-semibold">{formatEuro(segment.rollout)}</span></div><div className="flex justify-between pt-3 border-t-2"><span className="font-bold">Total</span><span className="font-bold text-xl">{formatEuro(totalOneTime)}</span></div></div>)}
+                          </div>
+                          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div className="bg-gradient-to-br from-cyan-500 to-blue-600 rounded-xl p-6 text-white shadow-lg"><h3 className="text-lg font-semibold mb-2 opacity-90">Year 1 Total</h3><div className="text-sm opacity-75 mb-1">One-time plus Annual recurring</div><div className="text-3xl font-bold">{formatEuro(year1Total)}</div></div>
+                            <div className="bg-gradient-to-br from-emerald-500 to-green-600 rounded-xl p-6 text-white shadow-lg"><h3 className="text-lg font-semibold mb-2 opacity-90">Year 2 plus Annual</h3><div className="text-sm opacity-75 mb-1">Recurring costs only</div><div className="text-3xl font-bold">{formatEuro(year2PlusAnnual)}</div></div>
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  ) : (
+                    <div className="text-center p-8"><h2 className="text-2xl font-bold mb-4">Pricing Matrix</h2><p className="text-gray-600">Complete pricing breakdown coming soon...</p></div>
+                  )}
+                </div>
+              </div>
+            </div>
+          );
+        };ReactDOM.render(<PricingCalculator />, document.getElementById('root'));
     </script>
 </body>
 </html>
